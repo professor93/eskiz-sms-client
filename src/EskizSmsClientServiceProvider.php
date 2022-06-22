@@ -15,7 +15,7 @@ class EskizSmsClientServiceProvider extends PackageServiceProvider
 
         $this->app->singleton(EskizSmsClient::class, function () {
             $config = config('sms');
-            Http::macro('eskiz', fn(): PendingRequest => Http::baseUrl($config['api_url']));
+            Http::macro('eskiz', fn (): PendingRequest => Http::baseUrl($config['api_url']));
 
             return new EskizSmsClient(
                 email: $config['email'],
