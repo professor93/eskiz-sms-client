@@ -13,7 +13,7 @@ class EskizSmsClient
         private readonly string $email,
         private readonly string $password,
         private readonly int    $tokenLifetime,
-        private readonly string $sender = ''
+        private readonly string $sender
     ) {
         $this->login();
     }

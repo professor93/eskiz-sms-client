@@ -20,7 +20,7 @@ class EskizSmsClientServiceProvider extends PackageServiceProvider
                 email: $config['email'],
                 password: $config['password'],
                 tokenLifetime: $config['token_lifetime'],
-                sender: $config['sender'] ?? '',
+                sender: $config['sender'] ?? '4546',
             );
         });
     }
