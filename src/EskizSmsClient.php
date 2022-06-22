@@ -2,7 +2,6 @@
 
 namespace Uzbek\EskizSmsClient;
 
-use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 
 class EskizSmsClient
@@ -14,7 +13,8 @@ class EskizSmsClient
         private readonly string $password,
         private readonly int    $tokenLifetime,
         private readonly string $sender
-    ) {
+    )
+    {
         $this->login();
     }
 
@@ -26,20 +26,22 @@ class EskizSmsClient
         $this->token = cache()->remember(
             'sms_auth_token',
             $this->tokenLifetime,
-            fn () => Http::eskiz()->post('auth/login', ['email' => $this->email, 'password' => $this->password])->object()->data->token
+            fn() => Http::eskiz()->post('auth/login', ['email' => $this->email, 'password' => $this->password])->object()->data->token
         );
     }
 
     /**
-     * @throws \Exception
+     * @param string $number
+     * @param string $text
+     * @return array
      */
-    public function send(string $number, string $text): Response
+    public function send(string $number, string $text): array
     {
         return Http::eskiz()->withToken($this->token)->post('message/sms/send', [
             'mobile_phone' => $number,
             'message' => $text,
             'from' => $this->sender,
-        ]);
+        ])->json();
     }
 
     /**
@@ -48,15 +50,14 @@ class EskizSmsClient
      */
     public function about(): array
     {
-        return Http::eskiz()->get('auth/user');
+        return Http::eskiz()->get('auth/user')->json();
     }
 
     /**
-     * @return \Illuminate\Http\Client\Response
-     * @throws \Exception
+     * @return array
      */
-    public function limits(): Response
+    public function limits(): array
     {
-        return Http::eskiz()->get('user/get-limit');
+        return Http::eskiz()->get('user/get-limit')->json();
     }
 }
