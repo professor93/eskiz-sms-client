@@ -44,6 +44,7 @@ class EskizSmsClientServiceProvider extends PackageServiceProvider
                 return false;
             }
         }
+
         return true;
     }
 }
