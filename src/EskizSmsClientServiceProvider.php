@@ -9,41 +9,27 @@ use Spatie\LaravelPackageTools\PackageServiceProvider;
 
 class EskizSmsClientServiceProvider extends PackageServiceProvider
 {
-    private $config = [];
-
     public function configurePackage(Package $package): void
     {
         $package->name('eskiz-sms-client')->hasConfigFile();
         $this->app->singleton(EskizSmsClient::class, function () {
-            $this->config = config('eskiz-sms-client');
-            Http::macro('eskiz', function (): PendingRequest {
+            $config = config('eskiz-sms-client');
+            Http::macro('eskiz', function () use ($config): PendingRequest {
                 $options = [];
-                if ($this->hasConfig('proxy_url') && str_contains($this->config['proxy_url'], '://')) {
-                    $options['proxy'] = $this->config['proxy_url'];
-                } elseif ($this->hasConfig('proxy_proto', 'proxy_host', 'proxy_port')) {
-                    $options['proxy'] = $this->config['proxy_proto'] . '://' . $this->config['proxy_host'] . ':' . $this->config['proxy_port'];
+                $proxy_url = $config['proxy_url'] ?? (($config['proxy_proto'] ?? '') . '://' . ($config['proxy_host'] ?? '') . ':' . ($config['proxy_port'] ?? '')) ?? '';
+                if (is_string($proxy_url) && str_contains($proxy_url, '://') && strlen($proxy_url) > 12) {
+                    $options['proxy'] = $proxy_url;
                 }
 
-                return Http::baseUrl($this->config['api_url'])->withOptions($options);
+                return Http::baseUrl($config['api_url'])->withOptions($options);
             });
 
             return new EskizSmsClient(
-                email: $this->config['email'],
-                password: $this->config['password'],
-                tokenLifetime: $this->config['token_lifetime'],
-                sender: $this->config['sender'] ?? '4546',
+                email: $config['email'],
+                password: $config['password'],
+                tokenLifetime: $config['token_lifetime'],
+                sender: $config['sender'] ?? '4546',
             );
         });
-    }
-
-    private function hasConfig(...$keys): bool
-    {
-        foreach ($keys as $key) {
-            $val = $this->config[$key] ?? false;
-            if ($val === false || (is_string($val) && strlen($val) === 0) || (is_array($val) && count($val) === 0)) {
-                return false;
-            }
-        }
-        return true;
     }
 }
