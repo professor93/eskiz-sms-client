@@ -13,8 +13,7 @@ class EskizSmsClient
         private readonly string $password,
         private readonly int    $tokenLifetime,
         private readonly string $sender
-    )
-    {
+    ) {
         $this->login();
     }
 
@@ -26,7 +25,7 @@ class EskizSmsClient
         $this->token = cache()->remember(
             'sms_auth_token',
             $this->tokenLifetime,
-            fn() => Http::eskiz()->post('auth/login', ['email' => $this->email, 'password' => $this->password])->object()->data->token
+            fn () => Http::eskiz()->post('auth/login', ['email' => $this->email, 'password' => $this->password])->object()->data->token
         );
     }
 
