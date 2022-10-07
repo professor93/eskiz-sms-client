@@ -2,6 +2,10 @@
 
 All notable changes to `eskiz-sms-client` will be documented in this file.
 
+## 1.0.7 - 2022-10-07
+
+Added sender (from) to config.
+
 ## 1.0.6 - 2022-08-30
 
 Fix config checker function
