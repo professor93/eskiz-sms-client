@@ -1,5 +1,7 @@
 <?php
 
-it('can test', function () {
-    expect(true)->toBeTrue();
+use Uzbek\EskizSmsClient\Facades\Sms;
+
+it('can resolve the facade', function () {
+    expect(Sms::getFacadeRoot())->toBeInstanceOf(\Uzbek\EskizSmsClient\EskizSmsClient::class);
 });

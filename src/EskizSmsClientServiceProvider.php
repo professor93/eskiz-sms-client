@@ -6,6 +6,7 @@ use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
+use Uzbek\EskizSmsClient\Http\FakeProvider;
 
 class EskizSmsClientServiceProvider extends PackageServiceProvider
 {
@@ -23,6 +24,7 @@ class EskizSmsClientServiceProvider extends PackageServiceProvider
 
                 return Http::baseUrl($config['api_url'])->withOptions($options);
             });
+            FakeProvider::register();
 
             return new EskizSmsClient(
                 email: $config['email'],
